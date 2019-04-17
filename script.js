@@ -1,4 +1,6 @@
 
+const credentials = `client_id=${clientID}&client_secret=${clientSecret}`;
+
 const $URLInput = $('input#repo_url');
 
 const isURLValid = (URL) => {
@@ -6,7 +8,7 @@ const isURLValid = (URL) => {
     return URL.match(regex);
 }
 
-$URLInput.on('input', async() => {
+$URLInput.on('input', async () => {
     const URL = $URLInput.val();
     const match = isURLValid(URL);
     
@@ -15,27 +17,37 @@ $URLInput.on('input', async() => {
         const repoName = match[2];
         const repoPath = user + '/' + repoName;
 
-        const userInfo = await getUserDetails(user);
+        const userInfo = await callApi(`users/${user}`);
         renderUserDetails(userInfo);
 
-        const repoInfo = await getRepoDetails(repoPath);
-        renderRepoDetails(repoInfo);
+        
+        const repoInfo = await getRepoInfo(repoPath);
+        console.log(repoInfo);
+        // renderRepoDetails(repoInfo);
     }
 });
 
-const getUserDetails = (user) => (
-    axios
-    .get(`https://api.github.com/users/${user}?client_id=${clientID}&client_secret=${clientSecret}`)
-    .then(({ data }) => data)
-    .catch(err => console.log(err))
-);
+const callApi = (path, isURL = false) => {
+    const URL = isURL ? `${path}?${credentials}` : `https://api.github.com/${path}?${credentials}`;
+    return (
+        axios
+        .get(URL)
+        .then(({ data }) => data)
+        .catch(err => console.log(err))
+    );
+};
 
-const getRepoDetails = (repoPath) => (
-    axios
-    .get(`https://api.github.com/repos/${repoPath}?client_id=${clientID}&client_secret=${clientSecret}`)
-    .then(({ data }) => data)
-    .catch(err => console.log(err))
-)
+const getRepoInfo = async (repoPath) => {
+    const repoInfo = await callApi(`repos/${repoPath}`);
+
+    const commitsURL = repoInfo.commits_url.substr(0, repoInfo.commits_url.length - 6);
+    const commits = await callApi(commitsURL, true);
+
+    return {
+        repo: repoInfo,
+        commits,
+    }
+};
 
 const renderUserDetails = userInfo => {
     $('.repo_data').fadeIn(500);
