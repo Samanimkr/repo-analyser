@@ -22,12 +22,8 @@ html, body {
     box-shadow: 0 0 4px 2px #f7f7f7;
 }
 
-.header form {
+.header input[name="repourl"] {
     width: 50%;
-}
-
-.header form input[name="repo"] {
-    width: 100%;
     height: 42px;
     font-size: 20px;
     border: none;
@@ -37,11 +33,31 @@ html, body {
     color: #4c1252;
 }
 
-.header form input[name="repo"]::placeholder {
+.header input[name="repourl"]::placeholder {
     color: #ccc;
 }
 
-.header form input[name="repo"]:focus {
+.header input[name="repourl"]:focus {
     outline: none;
     box-shadow: 0 0 3px 2px #6f1c774b;
+}
+
+.repo_data {
+    display: none;
+    width: 100%;
+    min-height: 90%;
+    padding: 20px; 
+}
+
+.repo_data .user {
+    width: 20%;
+    box-shadow: 0 0 3px 2px #f7f7f7;
+}
+
+.repo_data .user img {
+    width: 100%;
+}
+
+.repo_data .user .user_details {
+    padding: 10px;
 }
