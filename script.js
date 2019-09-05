@@ -20,7 +20,6 @@ $URLInput.on('input', async () => {
         const userInfo = await callApi(`users/${user}`);
         renderUserDetails(userInfo);
 
-        
         const repoInfo = await getRepoInfo(repoPath);
         console.log(repoInfo);
         // renderRepoDetails(repoInfo);
@@ -43,9 +42,13 @@ const getRepoInfo = async (repoPath) => {
     const commitsURL = repoInfo.commits_url.substr(0, repoInfo.commits_url.length - 6);
     const commits = await callApi(commitsURL, true);
 
+    const issuesURL = repoInfo.issues_url.substr(0, repoInfo.issues_url.length - 9);
+    const issues = await callApi(issuesURL, true);
+
     return {
         repo: repoInfo,
         commits,
+        issues,
     }
 };
 
@@ -64,15 +67,15 @@ const renderUserDetails = userInfo => {
 }
 
 const renderRepoDetails = repoInfo => {
-    // $('.repo_data').fadeIn(500);
-        // const html = `
-        //     <img src="${data.avatar_url}" />
-        //     <div class="user_details">
-        //         <p>${data.name}</p>
-        //         <p><strong>Bio:</strong> ${data.bio}</p>
-        //         <p><strong>Followers:</strong> ${data.followers}</p>
-        //         <p><strong>Location:</strong> ${data.location}</p>
-        //     </div>
-        // `
-        // $('.user').html(html);
+    $('.repo_data').fadeIn(500);
+    const html = `
+        <img src="${data.avatar_url}" />
+        <div class="user_details">
+            <p>${data.name}</p>
+            <p><strong>Bio:</strong> ${data.bio}</p>
+            <p><strong>Followers:</strong> ${data.followers}</p>
+            <p><strong>Location:</strong> ${data.location}</p>
+        </div>
+    `
+    $('.repo_cards').html(html);
 }
